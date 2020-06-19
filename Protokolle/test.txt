@@ -1,1 +1,5 @@
 we can work now with Github.
+Routine on Github:
+Starten-> Pullen(unter repository im Menü auf Pullen drücken)
+Eine Veränderung hochladen: Adden, wenn mit der Konsole gearbeitet wird, bei der App: Es wird eine Veränderung unter Changes angezeigt,
+diese committen(mit Beschreibung) und anschließend pushen.
