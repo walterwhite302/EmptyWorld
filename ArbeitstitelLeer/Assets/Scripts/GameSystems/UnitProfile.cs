@@ -12,6 +12,7 @@ public class UnitProfile : ScriptableObject
     public int parentsReq;
     public int multiressources;
     public int childsProduced;
+    public bool viviparous;
 
     [Header("functioning")]
     public int maxvitality;
@@ -40,7 +41,11 @@ public class UnitProfile : ScriptableObject
 
     [Header("GFX")]
     public GameObject modelObject;
+    [Header("social")]
+    public bool alpha;
+
 }
+
 public enum UnitTerritory
 {
     aviar,

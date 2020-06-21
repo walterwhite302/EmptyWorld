@@ -23,7 +23,7 @@ public class Unit : MonoBehaviour
             return 0;
         }
     }
-    public void Initialize(UnitProfile profile, Biome biome, int k)
+    public void Initialize(UnitProfile profile, Biome biome, int k, Vector3 spawnPoint)
     {
         this.profile = profile;
         this.biome = biome;
@@ -37,6 +37,14 @@ public class Unit : MonoBehaviour
         {
             statesOfUnit[i] = CalculateStateValues(i);
         }
-        Instantiate(profile.modelObject, biome.nativeHolders[k]) ;
-    }
+        //biome.nativeHolders[k] = GetAPlace(k);
+        Instantiate(profile.modelObject, spawnPoint, Quaternion.identity) ;
+    }/*
+    public Transform GetAPlace(int race)
+    {
+        //Divide all members of race into groups
+
+        //Find start spots for the groups
+        
+    }*/
 }

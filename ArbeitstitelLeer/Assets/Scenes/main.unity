@@ -273,6 +273,7 @@ MonoBehaviour:
   numberOfTicksInSession: 0
   counts: 
   countsCreated: 
+  radius: 200
 --- !u!4 &496660453
 Transform:
   m_ObjectHideFlags: 0
@@ -300,7 +301,7 @@ GameObject:
   - component: {fileID: 551154534}
   m_Layer: 0
   m_Name: Terrain
-  m_TagString: Untagged
+  m_TagString: surface
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
