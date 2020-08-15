@@ -1,0 +1,4 @@
+Mit der Verwendung von Github stellt sich die Frage, wo wir unsere bisherigen und zukünftigen Inhalte eigentlich speichern wollen. 
+Ich würde Github als Speicherort vorschlagen, weil ich dies als praktischer empfinde als Discord. 
+
+-> Falls alle einverstanden sind, würde Yverion alle Inhalte die öffentlich zugänglich sind geordnet auf Github verfrachten.
