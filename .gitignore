@@ -59,3 +59,7 @@ sysinfo.txt
 crashlytics-build.properties
 
 ArbeitstitelLeer/Assets/Protokolle.meta
+
+# macOS
+.DS_Store
+._*
