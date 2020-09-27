@@ -8,14 +8,7 @@ public class ThirdPersonMovement : MonoBehaviour
     public Transform cam; //Kamerabewegung
     public float speed = 6f;
     public float smoothRotation = 0.1f;
-    float smoothVelocity;
-
-    /* Start is called before the first frame update
-    void Start()
-    {
-      
-    }
-    */
+    float smoothVelocity;  //only used for storing
 
     // Update is called once per frame
     void Update()
