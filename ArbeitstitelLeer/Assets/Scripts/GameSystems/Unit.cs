@@ -27,7 +27,7 @@ public class Unit : MonoBehaviour
     {
         this.profile = profile;
         this.biome = biome;
-        Debug.Log(biome.countsCreated[k]);
+        //Debug.Log(biome.countsCreated[k]);
         name = profile.name + biome.countsCreated[k];
         transform.SetParent(biome.nativeHolders[k]);
         biome.countsCreated[k]++;
