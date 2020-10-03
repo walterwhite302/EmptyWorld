@@ -10,6 +10,7 @@ public class ThirdPersonControl : MonoBehaviour
 
     bool drawGizmos;
     public LayerMask layerMask;
+    public LayerMask playerLayer;
     Vector3 halfExtents = new Vector3(3.0f, 2.0f, 3.0f);
 
     public CharacterController controller;
