@@ -78,7 +78,7 @@ public class ThirdPersonControl : MonoBehaviour
         if (!inAttack)
         {
             // Find all the interactables in the local area.
-            int count = Physics.OverlapBoxNonAlloc(transform.position, halfExtents, overlapResult, transform.rotation, layerMask);
+            int count = Physics.OverlapBoxNonAlloc(controller.transform.position, halfExtents, overlapResult, transform.rotation, layerMask);
             float closestDot = 0.0f;
             int closest = -1;
             IInteractable interactable = new EmptyInteractable();
@@ -96,7 +96,7 @@ public class ThirdPersonControl : MonoBehaviour
             }
             if (interactable != null)
             {
-                Debug.Log(interactable.ToString());
+                //Debug.Log(interactable.ToString());
                 interactable.Interact();
             }
         }
