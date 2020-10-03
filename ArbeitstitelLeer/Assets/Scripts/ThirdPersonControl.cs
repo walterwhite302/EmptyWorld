@@ -133,7 +133,7 @@ public class ThirdPersonControl : MonoBehaviour
         if (!inAttack)
         {
             // Find all the interactables in the local area.
-            int count = Physics.OverlapBoxNonAlloc(controller.transform.position, halfExtents, overlapResult, transform.rotation, layerMask);
+            int count = Physics.OverlapBoxNonAlloc(controller.transform.position + controller.center, halfExtents, overlapResult, transform.rotation, layerMask);
             float closestDot = 0.0f;
             int closest = -1;
             IInteractable interactable = new EmptyInteractable();
@@ -161,6 +161,6 @@ public class ThirdPersonControl : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         if (drawGizmos)
-            Gizmos.DrawWireCube(transform.position, halfExtents);
+            Gizmos.DrawWireCube(controller.transform.position + controller.center, halfExtents);
     }
 }
