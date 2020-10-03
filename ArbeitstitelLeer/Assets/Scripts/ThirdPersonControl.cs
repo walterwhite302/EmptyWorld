@@ -1,7 +1,13 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class ThirdPersonControl : MonoBehaviour
 {
+    PCGameplay inputActions;
+    Vector2 move;
+    //Vector2 look;
+
+
     bool drawGizmos;
     public LayerMask layerMask;
     Vector3 halfExtents = new Vector3(3.0f, 2.0f, 3.0f);
@@ -14,7 +20,22 @@ public class ThirdPersonControl : MonoBehaviour
     //used for storing:
     float smoothVelocity;  
     Collider[] overlapResult = new Collider[10];
-
+    private void Awake()
+    {
+        inputActions = new PCGameplay();
+        inputActions.MT.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
+        inputActions.MT.Move.canceled += ctx => move = Vector2.zero;
+        //inputActions.MT.Look.performed += ctx => look = ctx.ReadValue<Vector2>();
+        //inputActions.MT.Look.canceled += ctx => look = Vector2.zero;
+    }
+    private void OnEnable()
+    {
+        inputActions.MT.Enable();
+    }
+    private void OnDisable()
+    {
+        inputActions.MT.Disable();
+    }
     void Start()
     {
         //Use this to ensure that the Gizmos are being drawn when in Play Mode.
@@ -23,10 +44,10 @@ public class ThirdPersonControl : MonoBehaviour
 
     void FixedUpdate()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
+        /*float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
-
+        */
         if (!inAttack)
         {
             if (Input.GetKey("e"))
@@ -34,7 +55,9 @@ public class ThirdPersonControl : MonoBehaviour
                 interact();
             }
         }
-
+        Vector3 direction = new Vector3(move.x, 0, move.y).normalized * Time.deltaTime * speed;
+        transform.Translate(direction);
+        
         if (direction.magnitude >= 0.1f)
         {
             float targetAngle = 0f; //Richtung, in die das Player Model sich drehen soll
@@ -50,6 +73,8 @@ public class ThirdPersonControl : MonoBehaviour
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
             
         }
+
+
     }
 
     void interact()
