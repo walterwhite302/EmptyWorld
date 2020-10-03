@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 
 public class ThirdPersonControl : MonoBehaviour
 {
@@ -19,13 +20,67 @@ public class ThirdPersonControl : MonoBehaviour
     //used for storing:
     float smoothVelocity;  
     Collider[] overlapResult = new Collider[10];
+    #region combat system
+    public List<GameObject> allWeapons = new List<GameObject>();
+    public List<GameObject> equippedTools = new List<GameObject>();
+    public int activeWeaponIndex;
+    public Transform HandA;
+    public Transform HandB;
+    public List<string> actor = new List<string>();
+    public List<string> target = new List<string>();
+    public List<string> enemyType = new List<string>();
+    delegate void DamageMethod();
+    void CreateList()
+    {
+        List<List<List<DamageMethod>>> SpecialDamage = new List<List<List<DamageMethod>>>();
+        for (int i = 0; i < actor.Count; i++)
+        {
+            for (int j = 0; j < target.Count; j++)
+            {
+                for (int k = 0; k < enemyType.Count; k++)
+                {
+                    SpecialDamage.Add(null);
+                }
+            }
+        }
+        SpecialDamage[0][0][0] = Rip;
+        SpecialDamage[0][1][0] = Snap;
 
+    }
+
+    
+
+    void Rip()
+    {
+        Debug.Log("Kar en Tuk");
+    }
+    void Snap()
+    {
+        Debug.Log("Take that Zod");
+    }
+    #endregion
+    void CheckWeapons()
+    {
+        int a = 0;
+        for (int i = 0; i < equippedTools.Count; i++)
+        {
+            if (equippedTools[i] == null)
+            {
+                a++;
+            }
+        }
+        if (a == equippedTools.Count)
+        {
+            equippedTools[0] = allWeapons[0];
+        }
+    }
     private void Awake()
     {
         inputActions = new PCGameplay();
         inputActions.MT.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         inputActions.MT.Move.canceled += ctx => move = Vector2.zero;
         inputActions.MT.Interact.performed += Interact;
+        CheckWeapons();
         //inputActions.MT.Look.performed += ctx => look = ctx.ReadValue<Vector2>();
         //inputActions.MT.Look.canceled += ctx => look = Vector2.zero;
     }
@@ -96,7 +151,7 @@ public class ThirdPersonControl : MonoBehaviour
             }
             if (interactable != null)
             {
-                //Debug.Log(interactable.ToString());
+                Debug.Log(interactable.ToString());
                 interactable.Interact();
             }
         }
