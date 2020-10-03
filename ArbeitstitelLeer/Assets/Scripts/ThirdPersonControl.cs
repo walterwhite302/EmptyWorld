@@ -7,7 +7,6 @@ public class ThirdPersonControl : MonoBehaviour
     Vector2 move;
     //Vector2 look;
 
-
     bool drawGizmos;
     public LayerMask layerMask;
     Vector3 halfExtents = new Vector3(3.0f, 2.0f, 3.0f);
@@ -20,25 +19,29 @@ public class ThirdPersonControl : MonoBehaviour
     //used for storing:
     float smoothVelocity;  
     Collider[] overlapResult = new Collider[10];
+
     private void Awake()
     {
         inputActions = new PCGameplay();
         inputActions.MT.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         inputActions.MT.Move.canceled += ctx => move = Vector2.zero;
+        inputActions.MT.Interact.performed += Interact;
         //inputActions.MT.Look.performed += ctx => look = ctx.ReadValue<Vector2>();
         //inputActions.MT.Look.canceled += ctx => look = Vector2.zero;
     }
+
     private void OnEnable()
     {
         inputActions.MT.Enable();
     }
+
     private void OnDisable()
     {
         inputActions.MT.Disable();
     }
+
     void Start()
     {
-        //Use this to ensure that the Gizmos are being drawn when in Play Mode.
         drawGizmos = true;
     }
 
@@ -48,13 +51,6 @@ public class ThirdPersonControl : MonoBehaviour
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
         */
-        if (!inAttack)
-        {
-            if (Input.GetKey("e"))
-            {
-                interact();
-            }
-        }
         Vector3 direction = new Vector3(move.x, 0, move.y).normalized * Time.deltaTime * speed;
         transform.Translate(direction);
         
@@ -77,29 +73,32 @@ public class ThirdPersonControl : MonoBehaviour
 
     }
 
-    void interact()
+    public void Interact(InputAction.CallbackContext context)
     {
-        // Find all the interactables in the local area.
-        int count = Physics.OverlapBoxNonAlloc(transform.position, halfExtents, overlapResult, transform.rotation, layerMask);
-        float closestDot = 0.0f;
-        int closest = -1;
-        IInteractable interactable = new EmptyInteractable();
-        for (int i = 0; i < count; ++i)
+        if (!inAttack)
         {
-            // Find the dot product between the player and the interactable. This will be larger the closer to the player the interactable is.
-            float d = Vector3.Dot(overlapResult[i].transform.position, transform.position);
-            // Store the closest interactable.
-            if (d > closestDot && overlapResult[i].tag == "Interactable")
+            // Find all the interactables in the local area.
+            int count = Physics.OverlapBoxNonAlloc(transform.position, halfExtents, overlapResult, transform.rotation, layerMask);
+            float closestDot = 0.0f;
+            int closest = -1;
+            IInteractable interactable = new EmptyInteractable();
+            for (int i = 0; i < count; ++i)
             {
-                closestDot = d;
-                closest = i;
-                interactable = overlapResult[closest].GetComponent<IInteractable>();
+                // Find the dot product between the player and the interactable. This will be larger the closer to the player the interactable is.
+                float d = Vector3.Dot(overlapResult[i].transform.position, transform.position);
+                // Store the closest interactable.
+                if (d > closestDot && overlapResult[i].tag == "Interactable")
+                {
+                    closestDot = d;
+                    closest = i;
+                    interactable = overlapResult[closest].GetComponent<IInteractable>();
+                }
             }
-        }
-        if (interactable != null)
-        {
-            //Debug.Log(interactable.ToString());
-            interactable.Interact();
+            if (interactable != null)
+            {
+                Debug.Log(interactable.ToString());
+                interactable.Interact();
+            }
         }
     }
 

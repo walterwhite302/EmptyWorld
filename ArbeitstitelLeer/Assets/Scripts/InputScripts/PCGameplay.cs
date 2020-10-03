@@ -25,6 +25,14 @@ public class @PCGameplay : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""c80d775e-f32f-47d3-9eda-386c887ba389"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -82,6 +90,17 @@ public class @PCGameplay : IInputActionCollection, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a702899e-4b88-4adb-8ff3-34882e8bb5ef"",
+                    ""path"": ""<Keyboard>/#(e)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -91,6 +110,7 @@ public class @PCGameplay : IInputActionCollection, IDisposable
         // MT
         m_MT = asset.FindActionMap("MT", throwIfNotFound: true);
         m_MT_Move = m_MT.FindAction("Move", throwIfNotFound: true);
+        m_MT_Interact = m_MT.FindAction("Interact", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -141,11 +161,13 @@ public class @PCGameplay : IInputActionCollection, IDisposable
     private readonly InputActionMap m_MT;
     private IMTActions m_MTActionsCallbackInterface;
     private readonly InputAction m_MT_Move;
+    private readonly InputAction m_MT_Interact;
     public struct MTActions
     {
         private @PCGameplay m_Wrapper;
         public MTActions(@PCGameplay wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_MT_Move;
+        public InputAction @Interact => m_Wrapper.m_MT_Interact;
         public InputActionMap Get() { return m_Wrapper.m_MT; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -158,6 +180,9 @@ public class @PCGameplay : IInputActionCollection, IDisposable
                 @Move.started -= m_Wrapper.m_MTActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_MTActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_MTActionsCallbackInterface.OnMove;
+                @Interact.started -= m_Wrapper.m_MTActionsCallbackInterface.OnInteract;
+                @Interact.performed -= m_Wrapper.m_MTActionsCallbackInterface.OnInteract;
+                @Interact.canceled -= m_Wrapper.m_MTActionsCallbackInterface.OnInteract;
             }
             m_Wrapper.m_MTActionsCallbackInterface = instance;
             if (instance != null)
@@ -165,6 +190,9 @@ public class @PCGameplay : IInputActionCollection, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Interact.started += instance.OnInteract;
+                @Interact.performed += instance.OnInteract;
+                @Interact.canceled += instance.OnInteract;
             }
         }
     }
@@ -172,5 +200,6 @@ public class @PCGameplay : IInputActionCollection, IDisposable
     public interface IMTActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
     }
 }
