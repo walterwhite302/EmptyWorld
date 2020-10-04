@@ -21,74 +21,15 @@ public class ThirdPersonControl : MonoBehaviour
     //used for storing:
     float smoothVelocity;  
     Collider[] overlapResult = new Collider[10];
-    #region combat system
-    public List<GameObject> allWeapons = new List<GameObject>();
-    public List<GameObject> equippedTools = new List<GameObject>();
-    public int activeWeaponIndex;
-    public Transform HandA;
-    public Transform HandB;
-    public List<string> actor = new List<string>();
-    public List<string> target = new List<string>();
-    public List<string> enemyType = new List<string>();
-    delegate void DamageMethod();
-    private List<List<List<DamageMethod>>> SpecialDamage = new List<List<List<DamageMethod>>>();
-
     
-    void CreateList() //Weil C# scheisse mit mehrdimensionalen Listen ist, muss für jeden Waffentyp wiefolgt die Liste der Methoden initialisiert werden und anschließend SpecialDamage hinzugefügt werden.
-    {
-        List<DamageMethod> melees = new List<DamageMethod> { Rip, Snap };
-        SpecialDamage.Add(new List<List<DamageMethod>> { melees});
-        /* Hier müsste noch um eine Listenstufe und einer weiteren Schleife erweitert werden.
-        int a = 0;
-        foreach(List<DamageMethod> i in SpecialDamage)
-        {
-            
-            int b = 0;
-            foreach (DamageMethod j in i)
-            {
-                
-                Debug.Log(a + "_" + b);
-                b++;
-            }
-            a++;
-        }*/
-
-    }
-
-
-    void Rip()
-    {
-        Debug.Log("Kar en Tuk");
-    }
-    void Snap()
-    {
-        Debug.Log("Take that Zod");
-    }
-    #endregion
-    void CheckWeapons()
-    {
-        int a = 0;
-        for (int i = 0; i < equippedTools.Count; i++)
-        {
-            if (equippedTools[i] == null)
-            {
-                a++;
-            }
-        }
-        if (a == equippedTools.Count)
-        {
-            equippedTools[0] = allWeapons[0];
-        }
-    }
     private void Awake()
     {
         inputActions = new PCGameplay();
         inputActions.MT.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         inputActions.MT.Move.canceled += ctx => move = Vector2.zero;
         inputActions.MT.Interact.performed += Interact;
-        inputActions.MT.specialCombatAction.performed += SpecialCombatMove;
-        CreateList();
-        CheckWeapons();
+        
+        
         //inputActions.MT.Look.performed += ctx => look = ctx.ReadValue<Vector2>();
         //inputActions.MT.Look.canceled += ctx => look = Vector2.zero;
     }
@@ -136,40 +77,7 @@ public class ThirdPersonControl : MonoBehaviour
 
 
     }
-    void SpecialCombatMove(InputAction.CallbackContext context)
-    {
-        CheckWeapons();
-        RaycastHit hit;
-        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, 10f, ~playerLayer))
-        {
-            if(hit.transform.tag == "damageObject")
-            {
-                string[] n = hit.transform.name.Split('_');
-                Debug.Log(n[0] + "_" + n[1]);
-                string a = n[0];
-                string b = n[1];
-                int c=0;
-                for(int i = 0; i < target.Count; i++)
-                {
-                    if(a == target[i])
-                    {
-                        c = i;
-                    }
-                }
-                int d=0;
-                for (int i = 0; i < enemyType.Count; i++)
-                {
-                    if (b == target[i])
-                    {
-                        d = i;
-                    }
-                }
-                Debug.Log("c:" + c + " d: " + d);
-                SpecialDamage[activeWeaponIndex][d][c]();
-            }
-        }
-        
-    }
+    
     public void Interact(InputAction.CallbackContext context)
     {
         if (!inAttack)
