@@ -31,25 +31,30 @@ public class ThirdPersonControl : MonoBehaviour
     public List<string> target = new List<string>();
     public List<string> enemyType = new List<string>();
     delegate void DamageMethod();
-    void CreateList()
+    private List<List<List<DamageMethod>>> SpecialDamage = new List<List<List<DamageMethod>>>();
+
+    
+    void CreateList() //Weil C# scheisse mit mehrdimensionalen Listen ist, muss für jeden Waffentyp wiefolgt die Liste der Methoden initialisiert werden und anschließend SpecialDamage hinzugefügt werden.
     {
-        List<List<List<DamageMethod>>> SpecialDamage = new List<List<List<DamageMethod>>>();
-        for (int i = 0; i < actor.Count; i++)
+        List<DamageMethod> melees = new List<DamageMethod> { Rip, Snap };
+        SpecialDamage.Add(new List<List<DamageMethod>> { melees});
+        /* Hier müsste noch um eine Listenstufe und einer weiteren Schleife erweitert werden.
+        int a = 0;
+        foreach(List<DamageMethod> i in SpecialDamage)
         {
-            for (int j = 0; j < target.Count; j++)
+            
+            int b = 0;
+            foreach (DamageMethod j in i)
             {
-                for (int k = 0; k < enemyType.Count; k++)
-                {
-                    SpecialDamage.Add(null);
-                }
+                
+                Debug.Log(a + "_" + b);
+                b++;
             }
-        }
-        SpecialDamage[0][0][0] = Rip;
-        SpecialDamage[0][1][0] = Snap;
+            a++;
+        }*/
 
     }
 
-    
 
     void Rip()
     {
@@ -81,6 +86,8 @@ public class ThirdPersonControl : MonoBehaviour
         inputActions.MT.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
         inputActions.MT.Move.canceled += ctx => move = Vector2.zero;
         inputActions.MT.Interact.performed += Interact;
+        inputActions.MT.specialCombatAction.performed += SpecialCombatMove;
+        CreateList();
         CheckWeapons();
         //inputActions.MT.Look.performed += ctx => look = ctx.ReadValue<Vector2>();
         //inputActions.MT.Look.canceled += ctx => look = Vector2.zero;
@@ -103,6 +110,7 @@ public class ThirdPersonControl : MonoBehaviour
 
     void FixedUpdate()
     {
+        Debug.DrawRay(cameraTransform.position, cameraTransform.forward * 100f, Color.green);
         /*float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
@@ -128,7 +136,40 @@ public class ThirdPersonControl : MonoBehaviour
 
 
     }
-
+    void SpecialCombatMove(InputAction.CallbackContext context)
+    {
+        CheckWeapons();
+        RaycastHit hit;
+        if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, 10f, ~playerLayer))
+        {
+            if(hit.transform.tag == "damageObject")
+            {
+                string[] n = hit.transform.name.Split('_');
+                Debug.Log(n[0] + "_" + n[1]);
+                string a = n[0];
+                string b = n[1];
+                int c=0;
+                for(int i = 0; i < target.Count; i++)
+                {
+                    if(a == target[i])
+                    {
+                        c = i;
+                    }
+                }
+                int d=0;
+                for (int i = 0; i < enemyType.Count; i++)
+                {
+                    if (b == target[i])
+                    {
+                        d = i;
+                    }
+                }
+                Debug.Log("c:" + c + " d: " + d);
+                SpecialDamage[activeWeaponIndex][d][c]();
+            }
+        }
+        
+    }
     public void Interact(InputAction.CallbackContext context)
     {
         if (!inAttack)

@@ -4,15 +4,11 @@ using UnityEngine;
 
 public class InteractionObject : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public string targetName;
+    public string enemyType;
+    private void Awake()
     {
-        
-    }
+        this.name = targetName + "_" + enemyType;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

@@ -33,6 +33,14 @@ public class @PCGameplay : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""specialCombatAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""e915b3c4-707c-48c0-a9df-c247d18416c6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -101,6 +109,17 @@ public class @PCGameplay : IInputActionCollection, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c224955b-bd97-4443-88da-4290596d90ad"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""specialCombatAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -111,6 +130,7 @@ public class @PCGameplay : IInputActionCollection, IDisposable
         m_MT = asset.FindActionMap("MT", throwIfNotFound: true);
         m_MT_Move = m_MT.FindAction("Move", throwIfNotFound: true);
         m_MT_Interact = m_MT.FindAction("Interact", throwIfNotFound: true);
+        m_MT_specialCombatAction = m_MT.FindAction("specialCombatAction", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -162,12 +182,14 @@ public class @PCGameplay : IInputActionCollection, IDisposable
     private IMTActions m_MTActionsCallbackInterface;
     private readonly InputAction m_MT_Move;
     private readonly InputAction m_MT_Interact;
+    private readonly InputAction m_MT_specialCombatAction;
     public struct MTActions
     {
         private @PCGameplay m_Wrapper;
         public MTActions(@PCGameplay wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_MT_Move;
         public InputAction @Interact => m_Wrapper.m_MT_Interact;
+        public InputAction @specialCombatAction => m_Wrapper.m_MT_specialCombatAction;
         public InputActionMap Get() { return m_Wrapper.m_MT; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -183,6 +205,9 @@ public class @PCGameplay : IInputActionCollection, IDisposable
                 @Interact.started -= m_Wrapper.m_MTActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_MTActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_MTActionsCallbackInterface.OnInteract;
+                @specialCombatAction.started -= m_Wrapper.m_MTActionsCallbackInterface.OnSpecialCombatAction;
+                @specialCombatAction.performed -= m_Wrapper.m_MTActionsCallbackInterface.OnSpecialCombatAction;
+                @specialCombatAction.canceled -= m_Wrapper.m_MTActionsCallbackInterface.OnSpecialCombatAction;
             }
             m_Wrapper.m_MTActionsCallbackInterface = instance;
             if (instance != null)
@@ -193,6 +218,9 @@ public class @PCGameplay : IInputActionCollection, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @specialCombatAction.started += instance.OnSpecialCombatAction;
+                @specialCombatAction.performed += instance.OnSpecialCombatAction;
+                @specialCombatAction.canceled += instance.OnSpecialCombatAction;
             }
         }
     }
@@ -201,5 +229,6 @@ public class @PCGameplay : IInputActionCollection, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnSpecialCombatAction(InputAction.CallbackContext context);
     }
 }
